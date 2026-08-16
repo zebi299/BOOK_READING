@@ -97,37 +97,49 @@
             font-weight: bold;
         }
 
-        /* TODO BUTTON */
+        /* TODO + NOTES */
 
-        .todo-area {
-            text-align: center;
-            padding: 40px 20px;
-            margin-top: 30px;
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 30px;
+        }
+
+        .todo-area,
+        .notes-area {
             background: #1b1b1b;
+            padding: 25px;
+            border-radius: 15px;
         }
 
-        .todo-area h2 {
-            font-size: 30px;
+        .todo-area h2,
+        .notes-area h2 {
+            text-align: center;
+            margin-top: 0;
         }
+
+        /* TODO */
 
         .todo-input {
             display: flex;
-            justify-content: center;
             gap: 10px;
             margin-top: 20px;
         }
 
         .todo-input input {
-            width: 60%;
-            max-width: 500px;
+            flex: 1;
             padding: 13px;
             border: none;
             border-radius: 8px;
             font-size: 16px;
         }
 
-        .todo-input button {
-            padding: 13px 20px;
+        .todo-input button,
+        .notes-area button {
+            padding: 13px 18px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -135,8 +147,7 @@
         }
 
         #taskList {
-            max-width: 600px;
-            margin: 25px auto;
+            margin: 25px 0 0;
             padding: 0;
             list-style: none;
         }
@@ -155,6 +166,7 @@
         .task-text {
             flex: 1;
             text-align: left;
+            cursor: pointer;
         }
 
         .completed {
@@ -170,26 +182,80 @@
             cursor: pointer;
         }
 
+        /* NOTES */
+
+        #noteTitle {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 16px;
+        }
+
+        #noteText {
+            width: 100%;
+            height: 150px;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        .save-note {
+            margin-top: 12px;
+            width: 100%;
+        }
+
+        #notesList {
+            margin-top: 20px;
+        }
+
+        .note-card {
+            background: #222;
+            padding: 15px;
+            margin-top: 12px;
+            border-radius: 10px;
+        }
+
+        .note-card h3 {
+            margin: 0 0 8px;
+        }
+
+        .note-card p {
+            color: #ccc;
+            white-space: pre-wrap;
+        }
+
+        .delete-note {
+            background: #333;
+            color: white;
+        }
+
         /* MOBILE */
 
         @media (max-width: 900px) {
+
             .books {
                 grid-template-columns: repeat(2, 1fr);
+            }
+
+            .workspace {
+                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 500px) {
+
             .books {
                 grid-template-columns: 1fr;
             }
 
             .todo-input {
                 flex-direction: column;
-                align-items: center;
-            }
-
-            .todo-input input {
-                width: 90%;
             }
         }
     </style>
@@ -322,24 +388,66 @@
 
 </section>
 
-<!-- TODO LIST -->
+<!-- TODO + NOTES -->
 
-<section class="todo-area">
+<section class="workspace">
 
-    <h2>📝 My To-Do List</h2>
+    <!-- LEFT: TODO -->
 
-    <div class="todo-input">
-        <input type="text" id="taskInput" placeholder="Write a task...">
-        <button onclick="addTask()">Add Task</button>
+    <div class="todo-area">
+
+        <h2>📝 My To-Do List</h2>
+
+        <div class="todo-input">
+
+            <input
+                type="text"
+                id="taskInput"
+                placeholder="Write a task..."
+            >
+
+            <button onclick="addTask()">Add Task</button>
+
+        </div>
+
+        <ul id="taskList"></ul>
+
     </div>
 
-    <ul id="taskList"></ul>
+
+    <!-- RIGHT: NOTES -->
+
+    <div class="notes-area">
+
+        <h2>📒 My Notes</h2>
+
+        <input
+            type="text"
+            id="noteTitle"
+            placeholder="Note title..."
+        >
+
+        <textarea
+            id="noteText"
+            placeholder="Write your notes here..."
+        ></textarea>
+
+        <button class="save-note" onclick="addNote()">
+            💾 Save Note
+        </button>
+
+        <div id="notesList"></div>
+
+    </div>
 
 </section>
 
+
 <script>
 
-    /* BOOK SEARCH */
+    /* =========================
+       BOOK SEARCH
+    ========================= */
 
     const searchBox = document.getElementById("search");
     const books = document.querySelectorAll(".book");
@@ -350,12 +458,17 @@
 
         books.forEach(function(book) {
 
-            const title = book.querySelector("h2").textContent.toLowerCase();
+            const title =
+                book.querySelector("h2").textContent.toLowerCase();
 
             if (title.includes(searchText)) {
+
                 book.style.display = "block";
+
             } else {
+
                 book.style.display = "none";
+
             }
 
         });
@@ -363,16 +476,29 @@
     });
 
 
-    /* TODO LIST */
+    /* =========================
+       TODO LIST
+    ========================= */
 
-    const taskInput = document.getElementById("taskInput");
-    const taskList = document.getElementById("taskList");
+    const taskInput =
+        document.getElementById("taskInput");
 
-    let tasks = JSON.parse(localStorage.getItem("myTasks")) || [];
+    const taskList =
+        document.getElementById("taskList");
+
+    let tasks =
+        JSON.parse(localStorage.getItem("myTasks")) || [];
+
 
     function saveTasks() {
-        localStorage.setItem("myTasks", JSON.stringify(tasks));
+
+        localStorage.setItem(
+            "myTasks",
+            JSON.stringify(tasks)
+        );
+
     }
+
 
     function showTasks() {
 
@@ -380,73 +506,255 @@
 
         tasks.forEach(function(task, index) {
 
-            const li = document.createElement("li");
+            const li =
+                document.createElement("li");
 
-            const text = document.createElement("span");
+            const text =
+                document.createElement("span");
 
             text.textContent = task.text;
+
             text.className = "task-text";
 
+
             if (task.completed) {
+
                 text.classList.add("completed");
+
             }
 
+
             text.onclick = function() {
-                tasks[index].completed = !tasks[index].completed;
+
+                tasks[index].completed =
+                    !tasks[index].completed;
+
                 saveTasks();
+
                 showTasks();
+
             };
 
-            const buttons = document.createElement("div");
-            buttons.className = "task-buttons";
 
-            const deleteButton = document.createElement("button");
+            const buttons =
+                document.createElement("div");
+
+            buttons.className =
+                "task-buttons";
+
+
+            const deleteButton =
+                document.createElement("button");
+
             deleteButton.textContent = "🗑️";
 
+
             deleteButton.onclick = function() {
+
                 tasks.splice(index, 1);
+
                 saveTasks();
+
                 showTasks();
+
             };
+
 
             buttons.appendChild(deleteButton);
 
             li.appendChild(text);
+
             li.appendChild(buttons);
 
             taskList.appendChild(li);
+
         });
+
     }
+
 
     function addTask() {
 
-        const task = taskInput.value.trim();
+        const task =
+            taskInput.value.trim();
+
 
         if (task === "") {
+
             return;
+
         }
 
+
         tasks.push({
+
             text: task,
+
             completed: false
+
         });
+
 
         saveTasks();
 
         taskInput.value = "";
 
         showTasks();
+
     }
 
-    taskInput.addEventListener("keypress", function(event) {
 
-        if (event.key === "Enter") {
-            addTask();
+    taskInput.addEventListener(
+        "keypress",
+        function(event) {
+
+            if (event.key === "Enter") {
+
+                addTask();
+
+            }
+
         }
+    );
 
-    });
 
     showTasks();
+
+
+    /* =========================
+       NOTES
+    ========================= */
+
+    const noteTitle =
+        document.getElementById("noteTitle");
+
+    const noteText =
+        document.getElementById("noteText");
+
+    const notesList =
+        document.getElementById("notesList");
+
+
+    let notes =
+        JSON.parse(localStorage.getItem("myNotes")) || [];
+
+
+    function saveNotes() {
+
+        localStorage.setItem(
+            "myNotes",
+            JSON.stringify(notes)
+        );
+
+    }
+
+
+    function showNotes() {
+
+        notesList.innerHTML = "";
+
+
+        notes.forEach(function(note, index) {
+
+            const card =
+                document.createElement("div");
+
+            card.className =
+                "note-card";
+
+
+            const title =
+                document.createElement("h3");
+
+            title.textContent =
+                note.title;
+
+
+            const text =
+                document.createElement("p");
+
+            text.textContent =
+                note.text;
+
+
+            const deleteButton =
+                document.createElement("button");
+
+            deleteButton.textContent =
+                "🗑️ Delete";
+
+            deleteButton.className =
+                "delete-note";
+
+
+            deleteButton.onclick =
+                function() {
+
+                    notes.splice(index, 1);
+
+                    saveNotes();
+
+                    showNotes();
+
+                };
+
+
+            card.appendChild(title);
+
+            card.appendChild(text);
+
+            card.appendChild(deleteButton);
+
+            notesList.appendChild(card);
+
+        });
+
+    }
+
+
+    function addNote() {
+
+        const title =
+            noteTitle.value.trim();
+
+        const text =
+            noteText.value.trim();
+
+
+        if (title === "" || text === "") {
+
+            alert(
+                "Please write a title and your note."
+            );
+
+            return;
+
+        }
+
+
+        notes.push({
+
+            title: title,
+
+            text: text
+
+        });
+
+
+        saveNotes();
+
+
+        noteTitle.value = "";
+
+        noteText.value = "";
+
+
+        showNotes();
+
+    }
+
+
+    showNotes();
 
 </script>
 
