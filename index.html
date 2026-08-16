@@ -14,14 +14,134 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: #111;
+            background: #000;
             color: white;
+            position: relative;
         }
+
+        /* WINE RED HEART BACKGROUND */
+
+        .heart-background {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .heart-background span {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background: #65001b;
+            transform: rotate(-45deg);
+            opacity: 0.75;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .heart-background span::before,
+        .heart-background span::after {
+            content: "";
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background: #65001b;
+            border-radius: 50%;
+        }
+
+        .heart-background span::before {
+            top: -35px;
+            left: 0;
+        }
+
+        .heart-background span::after {
+            top: 0;
+            left: 35px;
+        }
+
+        .heart-background span {
+            z-index: 0;
+        }
+
+        .heart-background span::before,
+        .heart-background span::after {
+            z-index: -1;
+        }
+
+        .heart-background span:nth-child(1) {
+            top: 8%;
+            left: 5%;
+        }
+
+        .heart-background span:nth-child(2) {
+            top: 25%;
+            left: 22%;
+        }
+
+        .heart-background span:nth-child(3) {
+            top: 10%;
+            right: 8%;
+        }
+
+        .heart-background span:nth-child(4) {
+            top: 45%;
+            left: 7%;
+        }
+
+        .heart-background span:nth-child(5) {
+            top: 60%;
+            left: 35%;
+        }
+
+        .heart-background span:nth-child(6) {
+            top: 38%;
+            right: 8%;
+        }
+
+        .heart-background span:nth-child(7) {
+            bottom: 10%;
+            left: 5%;
+        }
+
+        .heart-background span:nth-child(8) {
+            bottom: 20%;
+            left: 27%;
+        }
+
+        .heart-background span:nth-child(9) {
+            bottom: 8%;
+            right: 6%;
+        }
+
+        .heart-background span:nth-child(10) {
+            top: 70%;
+            right: 30%;
+        }
+
+        .heart-background span:nth-child(11) {
+            top: 5%;
+            left: 45%;
+        }
+
+        .heart-background span:nth-child(12) {
+            bottom: 40%;
+            right: 42%;
+        }
+
+        /* HEADER */
 
         header {
             text-align: center;
             padding: 35px 20px;
-            background: #1b1b1b;
+            background: rgba(27, 27, 27, 0.94);
         }
 
         header h1 {
@@ -61,7 +181,7 @@
         }
 
         .book {
-            background: #222;
+            background: rgba(34, 34, 34, 0.95);
             padding: 15px;
             border-radius: 12px;
             text-align: center;
@@ -110,7 +230,7 @@
 
         .todo-area,
         .notes-area {
-            background: #1b1b1b;
+            background: rgba(27, 27, 27, 0.95);
             padding: 25px;
             border-radius: 15px;
         }
@@ -263,16 +383,38 @@
 
 <body>
 
+<!-- HEARTS -->
+
+<div class="heart-background">
+    <span>Sawaira</span>
+    <span>Sawaira</span>
+    <span>Sawaira</span>
+    <span>Sawaira</span>
+    <span>Sawaira</span>
+    <span>Sawaira</span>
+    <span>Sawaira</span>
+    <span>Sawaira</span>
+    <span>Sawaira</span>
+    <span>Sawaira</span>
+    <span>Sawaira</span>
+    <span>Sawaira</span>
+</div>
+
+
+<!-- HEADER -->
+
 <header>
     <h1>📚 My Book Library</h1>
     <p>Read your favorite books online</p>
 </header>
+
 
 <!-- SEARCH -->
 
 <div class="search">
     <input type="text" id="search" placeholder="Search books...">
 </div>
+
 
 <!-- BOOKS -->
 
@@ -385,16 +527,20 @@
             <button>Read Book</button>
         </a>
     </div>
-<div class="book">
-    <img src="https://covers.openlibrary.org/b/isbn/9780140280197-L.jpg">
-    <h2>The 48 Laws of Power</h2>
-    <p>Robert Greene</p>
 
-    <a href="https://www.penguinrandomhouse.com/books/330912/the-48-laws-of-power-by-robert-greene/9780140280197/" target="_blank">
-        <button>Book Details</button>
-    </a>
-</div>
+    <!-- 48 LAWS OF POWER -->
+
+    <div class="book">
+        <img src="https://covers.openlibrary.org/b/isbn/9780140280197-L.jpg">
+        <h2>The 48 Laws of Power</h2>
+        <p>Robert Greene</p>
+        <a href="https://www.penguinrandomhouse.com/books/330912/the-48-laws-of-power-by-robert-greene/" target="_blank">
+            <button>Book Details</button>
+        </a>
+    </div>
+
 </section>
+
 
 <!-- TODO + NOTES -->
 
@@ -453,21 +599,28 @@
 
 <script>
 
-    /* =========================
-       BOOK SEARCH
-    ========================= */
+    /* BOOK SEARCH */
 
-    const searchBox = document.getElementById("search");
-    const books = document.querySelectorAll(".book");
+    const searchBox =
+        document.getElementById("search");
+
+    const books =
+        document.querySelectorAll(".book");
+
 
     searchBox.addEventListener("input", function() {
 
-        const searchText = searchBox.value.toLowerCase();
+        const searchText =
+            searchBox.value.toLowerCase();
+
 
         books.forEach(function(book) {
 
             const title =
-                book.querySelector("h2").textContent.toLowerCase();
+                book.querySelector("h2")
+                .textContent
+                .toLowerCase();
+
 
             if (title.includes(searchText)) {
 
@@ -484,9 +637,7 @@
     });
 
 
-    /* =========================
-       TODO LIST
-    ========================= */
+    /* TODO LIST */
 
     const taskInput =
         document.getElementById("taskInput");
@@ -494,8 +645,11 @@
     const taskList =
         document.getElementById("taskList");
 
+
     let tasks =
-        JSON.parse(localStorage.getItem("myTasks")) || [];
+        JSON.parse(
+            localStorage.getItem("myTasks")
+        ) || [];
 
 
     function saveTasks() {
@@ -512,22 +666,29 @@
 
         taskList.innerHTML = "";
 
+
         tasks.forEach(function(task, index) {
 
             const li =
                 document.createElement("li");
 
+
             const text =
                 document.createElement("span");
 
-            text.textContent = task.text;
 
-            text.className = "task-text";
+            text.textContent =
+                task.text;
+
+            text.className =
+                "task-text";
 
 
             if (task.completed) {
 
-                text.classList.add("completed");
+                text.classList.add(
+                    "completed"
+                );
 
             }
 
@@ -547,6 +708,7 @@
             const buttons =
                 document.createElement("div");
 
+
             buttons.className =
                 "task-buttons";
 
@@ -554,21 +716,27 @@
             const deleteButton =
                 document.createElement("button");
 
-            deleteButton.textContent = "🗑️";
+
+            deleteButton.textContent =
+                "🗑️";
 
 
-            deleteButton.onclick = function() {
+            deleteButton.onclick =
+                function() {
 
-                tasks.splice(index, 1);
+                    tasks.splice(index, 1);
 
-                saveTasks();
+                    saveTasks();
 
-                showTasks();
+                    showTasks();
 
-            };
+                };
 
 
-            buttons.appendChild(deleteButton);
+            buttons.appendChild(
+                deleteButton
+            );
+
 
             li.appendChild(text);
 
@@ -629,9 +797,7 @@
     showTasks();
 
 
-    /* =========================
-       NOTES
-    ========================= */
+    /* NOTES */
 
     const noteTitle =
         document.getElementById("noteTitle");
@@ -644,7 +810,9 @@
 
 
     let notes =
-        JSON.parse(localStorage.getItem("myNotes")) || [];
+        JSON.parse(
+            localStorage.getItem("myNotes")
+        ) || [];
 
 
     function saveNotes() {
